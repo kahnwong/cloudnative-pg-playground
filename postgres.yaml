@@ -1,0 +1,30 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: default
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.8-standard-bookworm
+  instances: 3
+  bootstrap:
+    initdb:
+      database: example
+      owner: pguser
+      secret:
+        name: my-user-secret
+  managed:
+    services:
+      additional:
+        - selectorType: rw
+          serviceTemplate:
+            metadata:
+              name: postgres-nodeport
+            spec:
+              type: NodePort
+              ports:
+                - name: postgres
+                  port: 5432
+                  targetPort: 5432
+                  nodePort: 30007
+  storage:
+    size: 10Gi
