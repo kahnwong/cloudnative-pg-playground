@@ -1,0 +1,16 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: default
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.8-standard-bookworm
+  instances: 3
+  bootstrap:
+    initdb:
+      database: example
+      owner: admin
+      secret:
+        name: my-user-secret
+  storage:
+    size: 10Gi
